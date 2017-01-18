@@ -13,64 +13,38 @@ tasksDict = {}
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = None
+    requestData = None
     responseData = None
     status = 400
-    dataRead = False
-
+    requestDataRead = False
 
     try:
-        data = json.loads(request.data)
-        dataRead = True
+        requestData = json.loads(request.data)
+        requestDataRead = True
     except:
         responseData = {'error': 'bad request'}
 
-    if dataRead:
-        if 'login' in data and 'password' in data:
-            if usersDict[data['login']]['password'] == data['password']:
+    if requestDataRead:
+        if 'login' in requestData and 'password' in requestData:
+            if usersDict[requestData['login']]['password'] == requestData['password']:
                 responseData = {
                     'message': "OK",
-                    'token': usersDict[data['login']]['token'],
+                    'token': usersDict[requestData['login']]['token'],
                     }
                 status = 200
             else:
                 responseData = {'error', 'Nie poprawny login lub haslo'}
         else:
-            response_data = {'error': 'Brak loginu lub hasla'}
+            responseData = {'error': 'Brak loginu lub hasla'}
 
-    headers = {'Content-Type': 'application/json'}
-    response = Response(json.dumps(responseData),
+    responseJsonData = json.dumps(responseData)
+    responseHeaders = {'Content-Type': 'application/json'}
+    response = Response(responseJsonData,
                         status=status,
                         mimetype = "application/json",
-                        headers=headers)
+                        headers=responseHeaders)
     return response
 
-
-    # if dataRead:
-    #     if 'login' in dataFromClientRequest and 'password' in dataFromClientRequest:
-    #         if dataFromClientRequest['login'] in usersDict:
-    #             if dataFromClientRequest['password'] == usersDict[dataFromClientRequest['login']]['password']:
-    #
-    #                 responseData['info'] = 'OK'
-    #                 responseData['token'] = usersDict[dataFromClientRequest['login']]['token']
-    #                 responseData['userID'] = usersDict[dataFromClientRequest['login']]['userID']
-    #
-    #                 status = 200
-    #
-    #             else:
-    #                 responseData = {'error': 'podane hasło jest nieprawidłowe'}
-    #         else:
-    #             responseData = {'error': 'uzytkownik nie istnieje'}
-    #     else:
-    #         responseData = {'error': 'nie podano loginu lub hasła'}
-    # else:
-    #     responseData = {'error': 'data from client request was not read'}
-    #
-    # headers = {'Content-Type': 'application/json'}
-    #
-    # responseJson = json.dumps(responseData)
-    # responseToClient = Response(responseJson, status=status, mimetype="application/json", headers=headers)
-    # return responseToClient
 
 
 if __name__ == '__main__':
