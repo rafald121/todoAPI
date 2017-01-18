@@ -26,15 +26,18 @@ def login():
 
     if requestDataRead:
         if 'login' in requestData and 'password' in requestData:
-            if usersDict[requestData['login']]['password'] == requestData['password']:
-                responseData = {
-                    'info': "OK",
-                    'token': usersDict[requestData['login']]['token'],
-                    'userID': usersDict[requestData['login']]['userID']
-                    }
-                status = 200
+            if requestData['login'] in usersDict:
+                if usersDict[requestData['login']]['password'] == requestData['password']:
+                    responseData = {
+                        'info': "OK",
+                        'token': usersDict[requestData['login']]['token'],
+                        'userID': usersDict[requestData['login']]['userID']
+                        }
+                    status = 200
+                else:
+                    responseData = {'error': 'Nie poprawny login lub haslo'}
             else:
-                responseData = {'error', 'Nie poprawny login lub haslo'}
+                responseData = {'error': 'Brak uzytkownika o podanym loginie w bazie danych'}
         else:
             responseData = {'error': 'Brak loginu lub hasla'}
 
