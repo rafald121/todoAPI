@@ -28,8 +28,9 @@ def login():
         if 'login' in requestData and 'password' in requestData:
             if usersDict[requestData['login']]['password'] == requestData['password']:
                 responseData = {
-                    'message': "OK",
+                    'info': "OK",
                     'token': usersDict[requestData['login']]['token'],
+                    'userID': usersDict[requestData['login']]['userID']
                     }
                 status = 200
             else:
