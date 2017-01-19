@@ -112,7 +112,43 @@ def notdone():
     return response
 
 
+@app.route("/tasks", methods=['GET'])
+def tasks():
+    requestData = None
+    requestDataRead = False
+    responseData = []
+    status = 400
+
+    try:
+        requestData = json.loads(request.data)
+        requestDataRead = True
+    except:
+        responseData.append({'error': 'serwer could not read request from client'})
+
+    if requestDataRead:
+        if requestData['token'] in usersDict['rafal']['token']:
+            responseData = []
+            # TODO dodac aby dodawalo do responseData cale tasksDict
+            responseData.append(tasksDict[1])
+            responseData.append(tasksDict[2])
+
+            status = 200
+        else:
+            responseData.append({'error': 'serwer could not not find token in serwer database'})
+    else:
+        responseData.append({'error': 'request data have not been read'})
+
+    responseJsonData = json.dumps(responseData)
+    responseHeaders = {'Content-Type': 'application/json'}
+    response = Response(responseJsonData,
+                        status=status,
+                        mimetype="application/json",
+                        headers=responseHeaders)
+    return response
+
+
 # def countUndoneTask():
+
 
 
 if __name__ == '__main__':
