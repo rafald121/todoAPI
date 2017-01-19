@@ -83,7 +83,7 @@ def notdone():
     responseData = None
 
     try:
-        requestData = json.load(request.data)
+        requestData = json.loads(request.data)
         requestDataRead = True
     except:
         responseData = {"error": "bad token give to request"}
