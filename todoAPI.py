@@ -34,6 +34,7 @@ tasksDict[3] = {"title": "Specyfikacja dla klienta",
                 "id": 3
                 }
 
+tokenDict = {}
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -114,29 +115,20 @@ def notdone():
 
 @app.route("/tasks", methods=['GET'])
 def tasks():
-    requestData = None
-    requestDataRead = False
-    responseData = []
-    status = 400
 
-    try:
-        requestData = json.loads(request.data)
-        requestDataRead = True
-    except:
-        responseData.append({'error': 'serwer could not read request from client'})
-
-    if requestDataRead:
-        if requestData['token'] in usersDict['rafal']['token']:
-            responseData = []
+    if 'token' in request.headers:
+        # TODO dodac dict of token
+        if request.headers['token'] in usersDict['rafal']:
+            listOfTasks = []
             # TODO dodac aby dodawalo do responseData cale tasksDict
-            responseData.append(tasksDict[1])
-            responseData.append(tasksDict[2])
-
+            listOfTasks.append(tasksDict[1])
+            listOfTasks.append(tasksDict[2])
             status = 200
+            responseData = listOfTasks
         else:
-            responseData.append({'error': 'serwer could not not find token in serwer database'})
+            responseData = {"error": "token from headers does not match to any user in userDict"}
     else:
-        responseData.append({'error': 'request data have not been read'})
+        responseData = {"error": "in request.headers there was not token"}
 
     responseJsonData = json.dumps(responseData)
     responseHeaders = {'Content-Type': 'application/json'}
@@ -144,7 +136,41 @@ def tasks():
                         status=status,
                         mimetype="application/json",
                         headers=responseHeaders)
+
     return response
+
+
+    # requestData = None
+    # requestDataRead = False
+    # responseData = []
+    # status = 400
+    #
+    # try:
+    #     requestData = json.loads(request.data)
+    #     requestDataRead = True
+    # except:
+    #     responseData.append({'error': 'serwer could not read request from client'})
+    #
+    # if requestDataRead:
+    #     if requestData['token'] in usersDict['rafal']['token']:
+    #         responseData = []
+    #         # TODO dodac aby dodawalo do responseData cale tasksDict
+    #         responseData.append(tasksDict[1])
+    #         responseData.append(tasksDict[2])
+    #
+    #         status = 200
+    #     else:
+    #         responseData.append({'error': 'serwer could not not find token in serwer database'})
+    # else:
+    #     responseData.append({'error': 'request data have not been read'})
+    #
+    # responseJsonData = json.dumps(responseData)
+    # responseHeaders = {'Content-Type': 'application/json'}
+    # response = Response(responseJsonData,
+    #                     status=status,
+    #                     mimetype="application/json",
+    #                     headers=responseHeaders)
+    # return response
 
 
 # def countUndoneTask():
