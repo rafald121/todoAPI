@@ -84,7 +84,7 @@ def notdone():
     responseData = None
 
     try:
-        requestData = json.loads(request.data)
+        requestData = request.headers
         requestDataRead = True
     except:
         responseData = {"error": "bad token give to request"}
@@ -95,7 +95,7 @@ def notdone():
         if requestData['token'] == usersDict['rafal']['token']:
 
             # TODO dodac funkcje, ktora liczy niewykonane zadania
-            responseData = {"undone": 3}
+            responseData = {"undone": 30}
             status = 200
         else:
             responseData = {
@@ -115,7 +115,7 @@ def notdone():
 
 @app.route("/tasks", methods=['GET'])
 def tasks():
-    status = 420
+    status = 400
 
     if 'token' in request.headers:
         # TODO dodac dict of token
