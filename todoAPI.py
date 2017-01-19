@@ -13,21 +13,21 @@ usersDict['rafal'] = {'token': 'rafaltoken', 'password': 'rafal', 'userID': 1, '
 
 tasksDict = {}
 tasksDict[1] = {"title": "Projekt z programowania internetowego",
-                "details": "Projekt, w którym piszemy własną usługę sieciową + 2 rodzaje klientów",
+                "details": "Projekt, w ktorym piszemy wlasna usluge sieciowa + 2 rodzaje klientow",
                 "timeToDo": "30.01.2016",
                 "tag": ["school"],
                 "done": 0,
                 "id": 1
                 }
 tasksDict[2] = {"title": "Sprzątnięćie kuchni",
-                "details": "Dokładne wyczyszczenie kuchenki i mikrofali",
+                "details": "Dokladne wyczyszczenie kuchenki i mikrofali",
                 "timeToDo": "15.02.2016",
                 "tag": ["home"],
                 "done": 0,
                 "id": 2
                 }
 tasksDict[3] = {"title": "Specyfikacja dla klienta",
-                "details": "Napisanie szczegółowej specyfikacji dla klienta dotyczącej aplikacji",
+                "details": "Napisanie szczegolowej specyfikacji dla klienta dotyczacej aplikacji",
                 "timeToDo": "25.09.2016",
                 "tag": ["work"],
                 "done": 0,
@@ -115,10 +115,11 @@ def notdone():
 
 @app.route("/tasks", methods=['GET'])
 def tasks():
+    status = 420
 
     if 'token' in request.headers:
         # TODO dodac dict of token
-        if request.headers['token'] in usersDict['rafal']:
+        if request.headers['token'] in usersDict['rafal']['token']:
             listOfTasks = []
             # TODO dodac aby dodawalo do responseData cale tasksDict
             listOfTasks.append(tasksDict[1])
