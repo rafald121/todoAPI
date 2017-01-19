@@ -43,7 +43,7 @@ def login():
     requestDataRead = False
 
     try:
-        requestData = json.load(request.data)
+        requestData = json.loads(request.data)
         requestDataRead = True
     except:
         responseData = {'error': 'nie moglem odczytac danych z requestu, ktory wyslal klient'}
