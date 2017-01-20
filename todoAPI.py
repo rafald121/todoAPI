@@ -15,21 +15,21 @@ tasksDict = {}
 tasksDict[1] = {"title": "Projekt z programowania internetowego",
                 "details": "Projekt, w ktorym piszemy wlasna usluge sieciowa + 2 rodzaje klientow",
                 "timeToDo": "30.01.2016",
-                "tag": ["school"],
+                "tag": "school",
                 "done": 0,
                 "id": 1
                 }
 tasksDict[2] = {"title": "Sprzątnięćie kuchni",
                 "details": "Dokladne wyczyszczenie kuchenki i mikrofali",
                 "timeToDo": "15.02.2016",
-                "tag": ["home"],
+                "tag": "home",
                 "done": 0,
                 "id": 2
                 }
 tasksDict[3] = {"title": "Specyfikacja dla klienta",
                 "details": "Napisanie szczegolowej specyfikacji dla klienta dotyczacej aplikacji",
                 "timeToDo": "25.09.2016",
-                "tag": ["work"],
+                "tag": "work",
                 "done": 0,
                 "id": 3
                 }
@@ -112,6 +112,56 @@ def notdone():
 
     return response
 
+@app.route("/tasks", methods=['POST'])
+def addTask():
+    if 'token' in request.headers:
+        status = 400
+        requestDataRead = False
+        if request.headers['token'] == usersDict['rafal']['token']:
+
+            try:
+                requestData = json.loads(request.data)
+                requestDataRead = True
+
+                if requestDataRead:
+
+                    if ('title' in requestData) and ('details' in requestData) and ('timeToDo' in requestData) and ('tag' in requestData):
+
+                        tasksDictLenght = len(tasksDict)
+
+                        title = requestData['title']
+                        details = requestData['details']
+                        timeToDo = requestData['timeToDo']
+                        tag = requestData['tag']
+                        done = 0
+                        id = tasksDictLenght+1
+
+                        tasksDict[tasksDictLenght+1]={
+                            'title': title,
+                            'details': details,
+                            'timeToDo': timeToDo,
+                            'tag': tag,
+                            'done': done,
+                            'id': id
+                        }
+                        responseData = tasksDict[tasksDictLenght+1]
+                        status = 201
+                    else:
+                        responseData = {"error": "klient nie podal wszystkich wymaganych pol requesta"}
+                else:
+                    responseData = {"error": "request klienta nie zostal prawidlowo odczytany"}
+
+            except:
+                responseData = {"error": "blad podczas odczytywania requesta klienta"}
+        else:
+            responseData = {"error": "brak uzytkownika, ktory pasuje do podanego przez klienta tokenu"}
+    else:
+        responseData = {"error": "klient nie podał tokenu w requescie"}
+
+    responseJsonData = json.dumps(responseData)
+    responseHeaders = {"Content-Type":"application/json"}
+    response = Response(responseJsonData, status=status, mimetype="application/json", headers=responseHeaders)
+    return response
 
 @app.route("/tasks", methods=['GET'])
 def tasks():
@@ -122,6 +172,7 @@ def tasks():
         if request.headers['token'] in usersDict['rafal']['token']:
             listOfTasks = []
             # TODO dodac aby dodawalo do responseData cale tasksDict
+            
             listOfTasks.append(tasksDict[1])
             listOfTasks.append(tasksDict[2])
             status = 200
