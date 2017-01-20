@@ -172,9 +172,8 @@ def tasks():
         if request.headers['token'] in usersDict['rafal']['token']:
             listOfTasks = []
             # TODO dodac aby dodawalo do responseData cale tasksDict
-            
-            listOfTasks.append(tasksDict[1])
-            listOfTasks.append(tasksDict[2])
+            for i in range(1,len(tasksDict)+1):
+                listOfTasks.append(tasksDict[i])
             status = 200
             responseData = listOfTasks
         else:
