@@ -198,8 +198,10 @@ def getTasks(id):
     if 'token' in request.headers:
         if request.headers['token'] == usersDict['rafal']['token']:
             if id in tasksDict:
+                responseData = {"error": "HAOOO"}
                 task = tasksDict[id]
                 responseData = task
+                print(responseData)
                 status = 200
             else:
                 responseData = {"error": "brak zadania o danym ID w bazie danych"}
@@ -209,7 +211,7 @@ def getTasks(id):
         responseData = {"error": "brak tokenu w requescie "}
 
     responseJsonData= json.dumps(responseData)
-    responseHeaders = {"Content-Type":"application/json"}
+    responseHeaders = {"Content-Type": "application/json"}
     response = Response(responseJsonData,
                         status=status,
                         mimetype="application/json",
