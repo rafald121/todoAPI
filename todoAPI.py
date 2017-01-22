@@ -34,6 +34,7 @@ tasksDict[3] = {"title": "Specyfikacja dla klienta",
                 "id": 3
                 }
 tokenDict = {}
+lastID = 0
 
 tagArray = ["work","school","home"]
 
@@ -199,7 +200,7 @@ def getTasks(id):
     if 'token' in request.headers:
         if request.headers['token'] == usersDict['rafal']['token']:
             if id in tasksDict:
-                responseData = {"error": "HAOOO"}
+
                 task = tasksDict[id]
                 responseData = task
                 print(responseData)
@@ -213,6 +214,38 @@ def getTasks(id):
 
     responseJsonData= json.dumps(responseData)
     responseHeaders = {"Content-Type": "application/json"}
+    response = Response(responseJsonData,
+                        status=status,
+                        mimetype="application/json",
+                        headers=responseHeaders)
+    return response
+
+
+@app.route("/tasks/" + "<int:id>", methods=['DELETE'])
+def deleteTasks(id):
+    status = 404
+
+    if 'token' in request.headers:
+        if request.headers['token'] == usersDict['rafal']['token']:
+            if id in tasksDict:
+                del tasksDict[id]
+
+                listOfTasks = []
+                for i in range(1, len(tasksDict) + 1):
+                    listOfTasks.append(tasksDict[i])
+                status = 204
+                responseData = listOfTasks
+
+            else:
+                responseData = {"error": "brak zadania o danym ID w bazie danych"}
+
+        else:
+            responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
+    else:
+        responseData = {"error": "brak tokenu w requescie "}
+
+    responseJsonData = json.dumps(responseData)
+    responseHeaders = {'Content-Type': 'application/json'}
     response = Response(responseJsonData,
                         status=status,
                         mimetype="application/json",
