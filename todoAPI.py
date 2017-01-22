@@ -23,7 +23,7 @@ tasksDict[2] = {"title": "Sprzątnięćie kuchni",
                 "details": "Dokladne wyczyszczenie kuchenki i mikrofali",
                 "timeToDo": "15.02.2016",
                 "tag": "home",
-                "done": 0,
+                "done": 1,
                 "id": 2
                 }
 tasksDict[3] = {"title": "Specyfikacja dla klienta",
@@ -191,7 +191,30 @@ def tasks():
 
 # def countUndoneTask():
 
+@app.route("/tasks/" + "<int:id>", methods=['GET'])
+def getTasks(id):
+    status = 400
 
+    if 'token' in request.headers:
+        if request.headers['token'] == usersDict['rafal']['token']:
+            if id in tasksDict:
+                task = tasksDict[id]
+                responseData = task
+                status = 200
+            else:
+                responseData = {"error": "brak zadania o danym ID w bazie danych"}
+        else:
+            responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
+    else:
+        responseData = {"error": "brak tokenu w requescie "}
+
+    responseJsonData= json.dumps(responseData)
+    responseHeaders = {"Content-Type":"application/json"}
+    response = Response(responseJsonData,
+                        status=status,
+                        mimetype="application/json",
+                        headers=responseHeaders)
+    return response
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
