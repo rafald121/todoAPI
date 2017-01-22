@@ -173,7 +173,7 @@ def tasks():
         if request.headers['token'] in usersDict['rafal']['token']:
             listOfTasks = []
             # TODO dodac aby dodawalo do responseData cale tasksDict
-            for i in range(1,len(tasksDict)+1):
+            for i in range(1, len(tasksDict)+1):
                 listOfTasks.append(tasksDict[i])
             status = 200
             responseData = listOfTasks
@@ -229,7 +229,7 @@ def getByTag(tag):
                 tasksListByTag = []
                 for i in range(1, len(tasksDict) + 1):
                     if tasksDict[i]['tag'] == str(tag):
-                        tasksListByTag.append()
+                        tasksListByTag.append(tasksDict[i])
                     responseData = tasksListByTag
                 status = 200
             else:
