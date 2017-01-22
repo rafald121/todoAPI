@@ -219,7 +219,7 @@ def getTasks(id):
                         headers=responseHeaders)
     return response
 
-@app.route("/tasks/" + "tag", methods='GET')
+@app.route("/tasks/" + "<tag>", methods=['GET'])
 def getByTag(tag):
     status = 200
 
