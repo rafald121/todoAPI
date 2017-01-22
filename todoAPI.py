@@ -33,8 +33,9 @@ tasksDict[3] = {"title": "Specyfikacja dla klienta",
                 "done": 0,
                 "id": 3
                 }
-
 tokenDict = {}
+
+tagArray = ["work","school","home"]
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -211,6 +212,34 @@ def getTasks(id):
         responseData = {"error": "brak tokenu w requescie "}
 
     responseJsonData= json.dumps(responseData)
+    responseHeaders = {"Content-Type": "application/json"}
+    response = Response(responseJsonData,
+                        status=status,
+                        mimetype="application/json",
+                        headers=responseHeaders)
+    return response
+
+@app.route("/tasks/" + "tag", methods='GET')
+def getByTag(tag):
+    status = 200
+
+    if 'token' in request.headers:
+        if request.headers['token'] == usersDict['rafal']['token']:
+            if tag in tagArray:
+                tasksListByTag = []
+                for i in range(1, len(tasksDict) + 1):
+                    if tasksDict[i]['tag'] == str(tag):
+                        tasksListByTag.append()
+                    responseData = tasksListByTag
+                status = 200
+            else:
+                responseData = {"error": "brak podanego w requescie tagu w bazie danych"}
+        else:
+            responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
+    else:
+        responseData = {"error": "brak tokenu w requescie "}
+
+    responseJsonData = json.dumps(responseData)
     responseHeaders = {"Content-Type": "application/json"}
     response = Response(responseJsonData,
                         status=status,
