@@ -239,8 +239,8 @@ def deleteTasks(id):
                 print (tasksDict)
 
                 listOfTasks = []
-                for i in range(1, len(tasksDict) + 1):
-                    listOfTasks.append(tasksDict[i])
+                for task in tasksDict:
+                    listOfTasks.append(tasksDict[task])
                 status = 204
                 responseData = listOfTasks
 

@@ -29,8 +29,8 @@
       <file leaf-file-name="todoAPI.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/todoAPI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="273" column="51" selection-start-line="273" selection-start-column="51" selection-end-line="273" selection-end-column="51" />
+            <state relative-caret-position="286">
+              <caret line="244" column="42" selection-start-line="244" selection-start-column="42" selection-end-line="244" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -761,8 +761,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/todoAPI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="273" column="51" selection-start-line="273" selection-start-column="51" selection-end-line="273" selection-end-column="51" />
+        <state relative-caret-position="286">
+          <caret line="244" column="42" selection-start-line="244" selection-start-column="42" selection-end-line="244" selection-end-column="42" />
           <folding />
         </state>
       </provider>
