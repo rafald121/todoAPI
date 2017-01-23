@@ -81,9 +81,7 @@ def login():
 def notdone():
     requestData = None
     requestDataRead = False
-    responseJsonData = None
     status = 400
-    responseData = None
 
     try:
         requestData = request.headers
@@ -93,9 +91,7 @@ def notdone():
 
     if requestDataRead:
         # TODO add searching login based on given in request token
-
         if requestData['token'] == usersDict['rafal']['token']:
-
             # TODO dodac funkcje, ktora liczy niewykonane zadania
             responseData = {"undone": 30}
             status = 200
@@ -119,8 +115,6 @@ def addTask():
 
     if 'token' in request.headers:
         global lastID
-        print("lastID")
-        print(lastID)
         status = 400
         requestDataRead = False
         if request.headers['token'] == usersDict['rafal']['token']:
@@ -179,9 +173,7 @@ def tasks():
         # TODO dodac dict of token
         if request.headers['token'] in usersDict['rafal']['token']:
             listOfTasks = []
-            # TODO dodac aby dodawalo do responseData cale tasksDict
-            # for i in range(1, len(tasksDict)+1):
-            #     listOfTasks.append(tasksDict[i])
+
             for task in tasksDict:
                 print(tasksDict[task])
                 listOfTasks.append(tasksDict[task])
@@ -240,17 +232,6 @@ def deleteTasks(id):
         if request.headers['token'] == usersDict['rafal']['token']:
             if id in tasksDict:
 
-                # print("przed usunieciem")
-                # for test in tasksDict:
-                #     print test
-                #     print tasksDict[test]
-                #
-                # del tasksDict[id]
-                #
-                # print("po usunieciu")
-                # for test1 in tasksDict:
-                #     print test1
-                #     print tasksDict[test1]
                 global tasksDict
                 del tasksDict[id]
 
@@ -260,11 +241,7 @@ def deleteTasks(id):
                     listOfTasks.append(tasksDict[task])
 
                 status = 200
-                print("lista of task")
-                print (listOfTasks)
                 responseData = listOfTasks
-                print ("responseData: ")
-                print responseData
             else:
                 responseData = {"error": "brak zadania o danym ID w bazie danych"}
 
@@ -288,11 +265,6 @@ def getByTag(tag):
     if 'token' in request.headers:
         if request.headers['token'] == usersDict['rafal']['token']:
             if tag in tagArray:
-
-                # for i in range(1, len(tasksDict) + 1):
-                #     if tasksDict[i]['tag'] == str(tag):
-                #         tasksListByTag.append(tasksDict[i])
-                #     responseData = tasksListByTag
 
                 tasksListByTag = []
 
