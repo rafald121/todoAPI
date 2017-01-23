@@ -34,7 +34,7 @@ tasksDict[3] = {"title": "Specyfikacja dla klienta",
                 "id": 3
                 }
 tokenDict = {}
-lastID = 0
+lastID = len(tasksDict)
 
 tagArray = ["work","school","home"]
 
@@ -136,9 +136,11 @@ def addTask():
                         timeToDo = requestData['timeToDo']
                         tag = requestData['tag']
                         done = 0
-                        id = tasksDictLenght+1
+                        global lastID
+                        id = lastID+1
+                        lastID += 1
 
-                        tasksDict[tasksDictLenght+1]={
+                        tasksDict[lastID]={
                             'title': title,
                             'details': details,
                             'timeToDo': timeToDo,
@@ -174,8 +176,12 @@ def tasks():
         if request.headers['token'] in usersDict['rafal']['token']:
             listOfTasks = []
             # TODO dodac aby dodawalo do responseData cale tasksDict
-            for i in range(1, len(tasksDict)+1):
-                listOfTasks.append(tasksDict[i])
+            # for i in range(1, len(tasksDict)+1):
+            #     listOfTasks.append(tasksDict[i])
+            for task in tasksDict:
+                print(tasksDict[task])
+                listOfTasks.append(tasksDict[task])
+
             status = 200
             responseData = listOfTasks
         else:
@@ -230,9 +236,11 @@ def deleteTasks(id):
             if id in tasksDict:
                 del tasksDict[id]
 
+                print (tasksDict)
+
                 listOfTasks = []
-                for i in range(1, len(tasksDict) + 1):
-                    listOfTasks.append(tasksDict[i])
+                for task in tasksDict:
+                    listOfTasks.append(tasksDict[task])
                 status = 204
                 responseData = listOfTasks
 
@@ -260,10 +268,16 @@ def getByTag(tag):
         if request.headers['token'] == usersDict['rafal']['token']:
             if tag in tagArray:
                 tasksListByTag = []
-                for i in range(1, len(tasksDict) + 1):
-                    if tasksDict[i]['tag'] == str(tag):
-                        tasksListByTag.append(tasksDict[i])
-                    responseData = tasksListByTag
+                # for i in range(1, len(tasksDict) + 1):
+                #     if tasksDict[i]['tag'] == str(tag):
+                #         tasksListByTag.append(tasksDict[i])
+                #     responseData = tasksListByTag
+                for task in tasksDict:
+                    if tasksDict[task]['tag']==str(tag):
+                        print(tasksDict[task])
+                        tasksListByTag.append(tasksDict[task])
+                responseData = tasksListByTag
+
                 status = 200
             else:
                 responseData = {"error": "brak podanego w requescie tagu w bazie danych"}
