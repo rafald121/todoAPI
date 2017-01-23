@@ -139,7 +139,7 @@ def addTask():
                         global lastID
                         id = lastID+1
                         lastID += 1
-                            
+
                         tasksDict[lastID]={
                             'title': title,
                             'details': details,
@@ -268,10 +268,16 @@ def getByTag(tag):
         if request.headers['token'] == usersDict['rafal']['token']:
             if tag in tagArray:
                 tasksListByTag = []
-                for i in range(1, len(tasksDict) + 1):
-                    if tasksDict[i]['tag'] == str(tag):
-                        tasksListByTag.append(tasksDict[i])
-                    responseData = tasksListByTag
+                # for i in range(1, len(tasksDict) + 1):
+                #     if tasksDict[i]['tag'] == str(tag):
+                #         tasksListByTag.append(tasksDict[i])
+                #     responseData = tasksListByTag
+                for task in tasksDict:
+                    if tasksDict[task]['tag']==str(tag):
+                        print(tasksDict[task])
+                        tasksListByTag.append(tasksDict[task])
+                responseData = tasksListByTag
+
                 status = 200
             else:
                 responseData = {"error": "brak podanego w requescie tagu w bazie danych"}
