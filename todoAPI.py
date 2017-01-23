@@ -223,7 +223,7 @@ def getTasks(id):
                         headers=responseHeaders)
     return response
 
-@app.route("/tasks/" + "<int:id>", methods=['DELETE'])
+@app.route("/tasks/" + "<int:id>", methods=['PUT'])
 def editDoneTasks(id):
     status = 404
     if 'token' in request.headers:
@@ -237,14 +237,15 @@ def editDoneTasks(id):
                         done = requestData['done']
 
                         if done:
-                            tasksDict[id]['done'] = {
-                                'title': title,
-                                'details': details,
-                                'timeToDo': timeToDo,
-                                'tag': tag,
-                                'done': done,
-                                'id': id
-                            }
+                            responseDone = 0
+                        else:
+                            responseDone = 1
+
+                        tasksDict[id] = {
+                            'done': responseDone,
+                        }
+                        responseData = tasksDict[id]
+
                 except:
                     responseData = {"error":"request klienta nie zostal prawidlowo odczytany"}
             else:
@@ -254,6 +255,12 @@ def editDoneTasks(id):
             responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
     else:
         responseData = {"error": "brak tokenu w requescie "}
+
+    responseJsonData = json.dumps(responseData)
+    responseHeaders = {"Content-Type": "application/json"}
+    response = Response(responseJsonData, status=status, mimetype="application/json", headers=responseHeaders)
+    return response
+
 
 @app.route("/tasks/" + "<int:id>", methods=['DELETE'])
 def deleteTasks(id):
