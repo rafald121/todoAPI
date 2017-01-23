@@ -116,7 +116,11 @@ def notdone():
 
 @app.route("/tasks", methods=['POST'])
 def addTask():
+
     if 'token' in request.headers:
+        global lastID
+        print("lastID")
+        print(lastID)
         status = 400
         requestDataRead = False
         if request.headers['token'] == usersDict['rafal']['token']:
@@ -129,14 +133,13 @@ def addTask():
 
                     if ('title' in requestData) and ('details' in requestData) and ('timeToDo' in requestData) and ('tag' in requestData):
 
-                        tasksDictLenght = len(tasksDict)
-
                         title = requestData['title']
                         details = requestData['details']
                         timeToDo = requestData['timeToDo']
                         tag = requestData['tag']
                         done = 0
                         global lastID
+                        print(lastID)
                         id = lastID+1
                         lastID += 1
 
@@ -148,7 +151,8 @@ def addTask():
                             'done': done,
                             'id': id
                         }
-                        responseData = tasksDict[tasksDictLenght+1]
+
+                        responseData = tasksDict[lastID]
                         status = 201
                     else:
                         responseData = {"error": "klient nie podal wszystkich wymaganych pol requesta"}
@@ -247,7 +251,8 @@ def deleteTasks(id):
                 # for test1 in tasksDict:
                 #     print test1
                 #     print tasksDict[test1]
-                
+                global tasksDict
+                del tasksDict[id]
 
                 listOfTasks = []
 
