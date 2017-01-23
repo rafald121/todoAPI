@@ -223,6 +223,37 @@ def getTasks(id):
                         headers=responseHeaders)
     return response
 
+@app.route("/tasks/" + "<int:id>", methods=['DELETE'])
+def editDoneTasks(id):
+    status = 404
+    if 'token' in request.headers:
+        if request.headers['token'] == usersDict['rafal']['token']:
+            if id in tasksDict:
+                try:
+                    requestData = json.loads(request.data)
+                    requestDataRead = True
+
+                    if requestDataRead:
+                        done = requestData['done']
+
+                        if done:
+                            tasksDict[id]['done'] = {
+                                'title': title,
+                                'details': details,
+                                'timeToDo': timeToDo,
+                                'tag': tag,
+                                'done': done,
+                                'id': id
+                            }
+                except:
+                    responseData = {"error":"request klienta nie zostal prawidlowo odczytany"}
+            else:
+                responseData = {"error": "brak zadania o danym ID w bazie danych"}
+
+        else:
+            responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
+    else:
+        responseData = {"error": "brak tokenu w requescie "}
 
 @app.route("/tasks/" + "<int:id>", methods=['DELETE'])
 def deleteTasks(id):
