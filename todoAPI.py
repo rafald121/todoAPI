@@ -182,6 +182,7 @@ def tasks():
                 print(tasksDict[task])
                 listOfTasks.append(tasksDict[task])
 
+            print listOfTasks
             status = 200
             responseData = listOfTasks
         else:
@@ -230,20 +231,35 @@ def getTasks(id):
 @app.route("/tasks/" + "<int:id>", methods=['DELETE'])
 def deleteTasks(id):
     status = 404
-
+    print("delete")
     if 'token' in request.headers:
         if request.headers['token'] == usersDict['rafal']['token']:
             if id in tasksDict:
-                del tasksDict[id]
 
-                print (tasksDict)
+                # print("przed usunieciem")
+                # for test in tasksDict:
+                #     print test
+                #     print tasksDict[test]
+                #
+                # del tasksDict[id]
+                #
+                # print("po usunieciu")
+                # for test1 in tasksDict:
+                #     print test1
+                #     print tasksDict[test1]
+                
 
                 listOfTasks = []
+
                 for task in tasksDict:
                     listOfTasks.append(tasksDict[task])
-                status = 204
-                responseData = listOfTasks
 
+                status = 200
+                print("lista of task")
+                print (listOfTasks)
+                responseData = listOfTasks
+                print ("responseData: ")
+                print responseData
             else:
                 responseData = {"error": "brak zadania o danym ID w bazie danych"}
 
@@ -267,15 +283,19 @@ def getByTag(tag):
     if 'token' in request.headers:
         if request.headers['token'] == usersDict['rafal']['token']:
             if tag in tagArray:
-                tasksListByTag = []
+
                 # for i in range(1, len(tasksDict) + 1):
                 #     if tasksDict[i]['tag'] == str(tag):
                 #         tasksListByTag.append(tasksDict[i])
                 #     responseData = tasksListByTag
+
+                tasksListByTag = []
+
                 for task in tasksDict:
                     if tasksDict[task]['tag']==str(tag):
                         print(tasksDict[task])
                         tasksListByTag.append(tasksDict[task])
+
                 responseData = tasksListByTag
 
                 status = 200
