@@ -81,9 +81,7 @@ def login():
 def notdone():
     requestData = None
     requestDataRead = False
-    responseJsonData = None
     status = 400
-    responseData = None
 
     try:
         requestData = request.headers
@@ -93,9 +91,7 @@ def notdone():
 
     if requestDataRead:
         # TODO add searching login based on given in request token
-
         if requestData['token'] == usersDict['rafal']['token']:
-
             # TODO dodac funkcje, ktora liczy niewykonane zadania
             responseData = {"undone": 30}
             status = 200
@@ -116,7 +112,9 @@ def notdone():
 
 @app.route("/tasks", methods=['POST'])
 def addTask():
+
     if 'token' in request.headers:
+        global lastID
         status = 400
         requestDataRead = False
         if request.headers['token'] == usersDict['rafal']['token']:
@@ -129,14 +127,13 @@ def addTask():
 
                     if ('title' in requestData) and ('details' in requestData) and ('timeToDo' in requestData) and ('tag' in requestData):
 
-                        tasksDictLenght = len(tasksDict)
-
                         title = requestData['title']
                         details = requestData['details']
                         timeToDo = requestData['timeToDo']
                         tag = requestData['tag']
                         done = 0
                         global lastID
+                        print(lastID)
                         id = lastID+1
                         lastID += 1
 
@@ -148,7 +145,8 @@ def addTask():
                             'done': done,
                             'id': id
                         }
-                        responseData = tasksDict[tasksDictLenght+1]
+
+                        responseData = tasksDict[lastID]
                         status = 201
                     else:
                         responseData = {"error": "klient nie podal wszystkich wymaganych pol requesta"}
@@ -175,13 +173,12 @@ def tasks():
         # TODO dodac dict of token
         if request.headers['token'] in usersDict['rafal']['token']:
             listOfTasks = []
-            # TODO dodac aby dodawalo do responseData cale tasksDict
-            # for i in range(1, len(tasksDict)+1):
-            #     listOfTasks.append(tasksDict[i])
+
             for task in tasksDict:
                 print(tasksDict[task])
                 listOfTasks.append(tasksDict[task])
 
+            print listOfTasks
             status = 200
             responseData = listOfTasks
         else:
@@ -230,20 +227,21 @@ def getTasks(id):
 @app.route("/tasks/" + "<int:id>", methods=['DELETE'])
 def deleteTasks(id):
     status = 404
-
+    print("delete")
     if 'token' in request.headers:
         if request.headers['token'] == usersDict['rafal']['token']:
             if id in tasksDict:
+
+                global tasksDict
                 del tasksDict[id]
 
-                print (tasksDict)
-
                 listOfTasks = []
+
                 for task in tasksDict:
                     listOfTasks.append(tasksDict[task])
-                status = 204
-                responseData = listOfTasks
 
+                status = 200
+                responseData = listOfTasks
             else:
                 responseData = {"error": "brak zadania o danym ID w bazie danych"}
 
@@ -267,15 +265,14 @@ def getByTag(tag):
     if 'token' in request.headers:
         if request.headers['token'] == usersDict['rafal']['token']:
             if tag in tagArray:
+
                 tasksListByTag = []
-                # for i in range(1, len(tasksDict) + 1):
-                #     if tasksDict[i]['tag'] == str(tag):
-                #         tasksListByTag.append(tasksDict[i])
-                #     responseData = tasksListByTag
+
                 for task in tasksDict:
                     if tasksDict[task]['tag']==str(tag):
                         print(tasksDict[task])
                         tasksListByTag.append(tasksDict[task])
+
                 responseData = tasksListByTag
 
                 status = 200
