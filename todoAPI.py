@@ -36,7 +36,8 @@ tasksDict[3] = {"title": "Specyfikacja dla klienta",
 tokenDict = {}
 lastID = len(tasksDict)
 
-tagArray = ["work","school","home"]
+tagArray = ["work", "school", "home"]
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -93,11 +94,14 @@ def notdone():
         # TODO add searching login based on given in request token
         if requestData['token'] == usersDict['rafal']['token']:
             # TODO dodac funkcje, ktora liczy niewykonane zadania
-            responseData = {"undone": 30}
+            undone = 0
+            for task in tasksDict:
+                if tasksDict[task]['done'] == 0:
+                    undone += 1
+            responseData = {"undone": undone}
             status = 200
         else:
-            responseData = {
-                "error": "couldn't match login to requested token(probably there isn't any user with requested token)"}
+            responseData = {"error": "couldn't match login to requested token(probably there isn't any user with requested token)"}
     else:
         responseData = {"error": "bad syntax of request(bad oken has been given"}
 
@@ -110,9 +114,9 @@ def notdone():
 
     return response
 
+
 @app.route("/tasks", methods=['POST'])
 def addTask():
-
     if 'token' in request.headers:
         global lastID
         status = 400
@@ -125,7 +129,8 @@ def addTask():
 
                 if requestDataRead:
 
-                    if ('title' in requestData) and ('details' in requestData) and ('timeToDo' in requestData) and ('tag' in requestData):
+                    if ('title' in requestData) and ('details' in requestData) and ('timeToDo' in requestData) and (
+                        'tag' in requestData):
 
                         title = requestData['title']
                         details = requestData['details']
@@ -134,10 +139,10 @@ def addTask():
                         done = 0
                         global lastID
                         print(lastID)
-                        id = lastID+1
+                        id = lastID + 1
                         lastID += 1
 
-                        tasksDict[lastID]={
+                        tasksDict[lastID] = {
                             'title': title,
                             'details': details,
                             'timeToDo': timeToDo,
@@ -161,9 +166,10 @@ def addTask():
         responseData = {"error": "klient nie podał tokenu w requescie"}
 
     responseJsonData = json.dumps(responseData)
-    responseHeaders = {"Content-Type":"application/json"}
+    responseHeaders = {"Content-Type": "application/json"}
     response = Response(responseJsonData, status=status, mimetype="application/json", headers=responseHeaders)
     return response
+
 
 @app.route("/tasks", methods=['GET'])
 def tasks():
@@ -194,6 +200,7 @@ def tasks():
                         headers=responseHeaders)
     return response
 
+
 # def countUndoneTask():
 
 @app.route("/tasks/" + "<int:id>", methods=['GET'])
@@ -215,13 +222,14 @@ def getTasks(id):
     else:
         responseData = {"error": "brak tokenu w requescie "}
 
-    responseJsonData= json.dumps(responseData)
+    responseJsonData = json.dumps(responseData)
     responseHeaders = {"Content-Type": "application/json"}
     response = Response(responseJsonData,
                         status=status,
                         mimetype="application/json",
                         headers=responseHeaders)
     return response
+
 
 # @app.route("/tasks/" + "<int:id>", methods=['PUT'])
 # def editDoneTasks(id):
@@ -274,7 +282,6 @@ def editDoneTasks(id):
                     requestDataRead = True
 
                     if requestDataRead:
-
                         title = requestData['title']
                         details = requestData['details']
                         timeToDo = requestData['timeToDo']
@@ -287,8 +294,9 @@ def editDoneTasks(id):
                         tasksDict[id][timeToDo] = timeToDo
                         tasksDict[id][tag] = tag
                         tasksDict[id][title] = title
-
+                        print(tasksDict[id])
                         responseData = tasksDict[id]
+                        status = 200
                         # if done:
                         #     responseDone = 0
                         # else:
@@ -300,7 +308,7 @@ def editDoneTasks(id):
                         # responseData = tasksDict[id]
 
                 except:
-                    responseData = {"error":"request klienta nie zostal prawidlowo odczytany"}
+                    responseData = {"error": "request klienta nie zostal prawidlowo odczytany"}
             else:
                 responseData = {"error": "brak zadania o danym ID w bazie danych"}
 
@@ -349,6 +357,7 @@ def deleteTasks(id):
                         headers=responseHeaders)
     return response
 
+
 @app.route("/tasks/" + "<tag>", methods=['GET'])
 def getByTag(tag):
     status = 200
@@ -360,7 +369,7 @@ def getByTag(tag):
                 tasksListByTag = []
 
                 for task in tasksDict:
-                    if tasksDict[task]['tag']==str(tag):
+                    if tasksDict[task]['tag'] == str(tag):
                         print(tasksDict[task])
                         tasksListByTag.append(tasksDict[task])
 
@@ -381,6 +390,7 @@ def getByTag(tag):
                         mimetype="application/json",
                         headers=responseHeaders)
     return response
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
