@@ -280,20 +280,25 @@ def editDoneTasks(id):
                 try:
                     requestData = json.loads(request.data)
                     requestDataRead = True
-
+                    print ("dane do edycji od klienta")
+                    print requestData
                     if requestDataRead:
+                        print("jest?")
+                        print (requestData)
                         title = requestData['title']
                         details = requestData['details']
                         timeToDo = requestData['timeToDo']
                         tag = requestData['tag']
-                        id = requestData['id']
                         done = requestData['done']
+                        print("daneeee")
+                        print ("title %s, details %s, timeToDo %s, tag %s, id %s, done%s ", title, details, timeToDo, tag, id, done)
 
-                        tasksDict[id][title] = title
-                        tasksDict[id][details] = details
-                        tasksDict[id][timeToDo] = timeToDo
-                        tasksDict[id][tag] = tag
-                        tasksDict[id][title] = title
+                        tasksDict[id]['title'] = title
+                        tasksDict[id]['details'] = details
+                        tasksDict[id]['timeToDo'] = timeToDo
+                        tasksDict[id]['tag'] = tag
+                        tasksDict[id]['title'] = title
+                        print("EDITED TASK DICT DLA ID")
                         print(tasksDict[id])
                         responseData = tasksDict[id]
                         status = 200
