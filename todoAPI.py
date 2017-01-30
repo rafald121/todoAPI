@@ -49,7 +49,7 @@ def login():
         requestData = json.loads(request.data)
         requestDataRead = True
     except:
-        responseData = {'error': 'nie moglem odczytac danych z requestu, ktory wyslal klient'}
+        responseData = {'error': 'could not read request from client'}
 
     if requestDataRead:
         if 'login' in requestData and 'password' in requestData:
@@ -62,11 +62,11 @@ def login():
                     }
                     status = 200
                 else:
-                    responseData = {'error': 'Niepoprawny login lub haslo'}
+                    responseData = {'error': 'invalid login or password'}
             else:
-                responseData = {'error': 'Brak uzytkownika o podanym loginie w bazie danych'}
+                responseData = {'error': 'there isnt that user in database'}
         else:
-            responseData = {'error': 'Brak loginu lub hasla'}
+            responseData = {'error': 'empty login or password'}
 
     responseJsonData = json.dumps(responseData)
     responseHeaders = {'Content-Type': 'application/json'}
@@ -167,7 +167,7 @@ def addTask():
 
 @app.route("/tasks", methods=['GET'])
 def tasks():
-    status = 400
+    status = 200
 
     if 'token' in request.headers:
         # TODO dodac dict of token
@@ -184,7 +184,7 @@ def tasks():
         else:
             responseData = {"error": "token from headers does not match to any user in userDict"}
     else:
-        responseData = {"error": "in request.headers there was not token"}
+        responseData = {"error": "in request.headers was not token"}
 
     responseJsonData = json.dumps(responseData)
     responseHeaders = {'Content-Type': 'application/json'}
@@ -223,28 +223,81 @@ def getTasks(id):
                         headers=responseHeaders)
     return response
 
+# @app.route("/tasks/" + "<int:id>", methods=['PUT'])
+# def editDoneTasks(id):
+#     status = 404
+#     if 'token' in request.headers:
+#         if request.headers['token'] == usersDict['rafal']['token']:
+#             if id in tasksDict:
+#
+#                 try:
+#                     requestData = json.loads(request.data)
+#                     requestDataRead = True
+#
+#                     if requestDataRead:
+#                         done = requestData['done']
+#
+#                         if done:
+#                             responseDone = 0
+#                         else:
+#                             responseDone = 1
+#
+#                         tasksDict[id] = {
+#                             'done': responseDone,
+#                         }
+#                         responseData = tasksDict[id]
+#
+#                 except:
+#                     responseData = {"error":"request klienta nie zostal prawidlowo odczytany"}
+#             else:
+#                 responseData = {"error": "brak zadania o danym ID w bazie danych"}
+#
+#         else:
+#             responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
+#     else:
+#         responseData = {"error": "brak tokenu w requescie "}
+#
+#     responseJsonData = json.dumps(responseData)
+#     responseHeaders = {"Content-Type": "application/json"}
+#     response = Response(responseJsonData, status=status, mimetype="application/json", headers=responseHeaders)
+#     return response
+
 @app.route("/tasks/" + "<int:id>", methods=['PUT'])
 def editDoneTasks(id):
     status = 404
     if 'token' in request.headers:
         if request.headers['token'] == usersDict['rafal']['token']:
             if id in tasksDict:
+
                 try:
                     requestData = json.loads(request.data)
                     requestDataRead = True
 
                     if requestDataRead:
+
+                        title = requestData['title']
+                        details = requestData['details']
+                        timeToDo = requestData['timeToDo']
+                        tag = requestData['tag']
+                        id = requestData['id']
                         done = requestData['done']
 
-                        if done:
-                            responseDone = 0
-                        else:
-                            responseDone = 1
+                        tasksDict[id][title] = title
+                        tasksDict[id][details] = details
+                        tasksDict[id][timeToDo] = timeToDo
+                        tasksDict[id][tag] = tag
+                        tasksDict[id][title] = title
 
-                        tasksDict[id] = {
-                            'done': responseDone,
-                        }
                         responseData = tasksDict[id]
+                        # if done:
+                        #     responseDone = 0
+                        # else:
+                        #     responseDone = 1
+                        #
+                        # tasksDict[id] = {
+                        #     'done': responseDone,
+                        # }
+                        # responseData = tasksDict[id]
 
                 except:
                     responseData = {"error":"request klienta nie zostal prawidlowo odczytany"}
