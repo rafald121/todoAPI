@@ -173,7 +173,7 @@ def addTask():
 
 @app.route("/tasks", methods=['GET'])
 def tasks():
-    status = 200
+    status = 400
 
     if 'token' in request.headers:
         # TODO dodac dict of token
