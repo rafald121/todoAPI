@@ -336,16 +336,14 @@ def deleteTasks(id):
         if request.headers['token'] == usersDict['rafal']['token']:
             if id in tasksDict:
 
+
+                deletedTask = tasksDict[id]
+
                 global tasksDict
                 del tasksDict[id]
 
-                listOfTasks = []
-
-                for task in tasksDict:
-                    listOfTasks.append(tasksDict[task])
-
                 status = 200
-                responseData = listOfTasks
+                responseData = deletedTask
             else:
                 responseData = {"error": "brak zadania o danym ID w bazie danych"}
 
