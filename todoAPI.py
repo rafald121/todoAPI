@@ -201,10 +201,12 @@ def addTask():
 @app.route("/tasks/" + "<un_done>", methods=['GET'])
 def getListOfTasksByDone(un_done):
     status = 400
+    print("done or undone")
+    print(un_done)
 
     if 'token' in request.headers:
         if request.headers['token'] in usersDict['rafal']['token']:
-            if un_done is "done":
+            if un_done == "done":
                 listOfDoneTasks = []
 
                 for task in tasksDict:
@@ -214,7 +216,7 @@ def getListOfTasksByDone(un_done):
                 status = 200
                 responseData = listOfDoneTasks
 
-            elif un_done is "undone":
+            elif un_done == "undone":
                 listOfUndoneTasks = []
 
                 for task in tasksDict:
