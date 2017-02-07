@@ -198,48 +198,59 @@ def addTask():
     response = Response(responseJsonData, status=status, mimetype="application/json", headers=responseHeaders)
     return response
 
-@app.route("/tasks/" + "<un_done>", methods=['GET'])
-def getListOfTasksByDone(un_done):
+@app.route("/tasks/" + "<tag>", methods = ['GET'])
+def getListByTag(tag):
     status = 400
-    print("done or undone")
-    print(un_done)
-    
+
     if 'token' in request.headers:
         if request.headers['token'] in usersDict['rafal']['token']:
-            if un_done == "done":
-                listOfDoneTasks = []
 
-                for task in tasksDict:
-                    if tasksDict[task]['done'] == 1:
-                        listOfDoneTasks.append(tasksDict[task])
-
+            if tag == "done" or tag=="undone":
+                listOfTaskByTag = getListOfTasksByDone(tag)
+                responseData = listOfTaskByTag
                 status = 200
-                responseData = listOfDoneTasks
-
-            elif un_done == "undone":
-                listOfUndoneTasks = []
-
-                for task in tasksDict:
-                    if tasksDict[task]['done'] == 0:
-                        listOfUndoneTasks.append(tasksDict[task])
-                status = 200
-                responseData = listOfUndoneTasks
-
             else:
-                status = 400
-                print("inny argument niz done albo undone, pomyuka")
+                if tag in tagArray:
+                    listOfTaskByTag = getByTag(tag)
+                    responseData = listOfTaskByTag
+                    status = 200
+                else:
+                    responseData = {"error": "brak podanego w requescie tagu w bazie danych"}
+
         else:
-            responseData = {"error": "token from headers does not match to any user in userDict"}
+            responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
     else:
-        responseData = {"error": "in request.headers was not token"}
+        responseData = {"error": "brak tokenu w requescie "}
 
     responseJsonData = json.dumps(responseData)
-    responseHeaders = {'Content-Type': 'application/json'}
+    responseHeaders = {"Content-Type": "application/json"}
     response = Response(responseJsonData,
                         status=status,
                         mimetype="application/json",
                         headers=responseHeaders)
     return response
+
+
+# @app.route("/tasks/" + "<un_done>", methods=['GET'])
+def getListOfTasksByDone(un_done):
+    print("done or undone")
+    print(un_done)
+
+    listOfDoneTasks = []
+
+    if un_done == "done":
+        for task in tasksDict:
+            if tasksDict[task]['done'] == 1:
+                listOfDoneTasks.append(tasksDict[task])
+
+    elif un_done == "undone":
+        for task in tasksDict:
+            if tasksDict[task]['done'] == 0:
+                listOfDoneTasks.append(tasksDict[task])
+
+    else:
+        print("BIG MISTAKE")
+    return listOfDoneTasks
 
 
 @app.route("/tasks", methods=['GET'])
@@ -402,38 +413,19 @@ def deleteTasks(id):
     return response
 
 
-@app.route("/tasks/" + "<tag>", methods=['GET'])
+# @app.route("/tasks/" + "<tag>", methods=['GET'])
 def getByTag(tag):
-    status = 200
 
-    if 'token' in request.headers:
-        if request.headers['token'] == usersDict['rafal']['token']:
-            if tag in tagArray:
 
-                tasksListByTag = []
+    tasksListByTag = []
 
-                for task in tasksDict:
-                    if tasksDict[task]['tag'] == str(tag):
-                        print(tasksDict[task])
-                        tasksListByTag.append(tasksDict[task])
+    for task in tasksDict:
+        if tasksDict[task]['tag'] == str(tag):
+            print(tasksDict[task])
+            tasksListByTag.append(tasksDict[task])
 
-                responseData = tasksListByTag
+    return tasksListByTag
 
-                status = 200
-            else:
-                responseData = {"error": "brak podanego w requescie tagu w bazie danych"}
-        else:
-            responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
-    else:
-        responseData = {"error": "brak tokenu w requescie "}
-
-    responseJsonData = json.dumps(responseData)
-    responseHeaders = {"Content-Type": "application/json"}
-    response = Response(responseJsonData,
-                        status=status,
-                        mimetype="application/json",
-                        headers=responseHeaders)
-    return response
 
 
 if __name__ == '__main__':
