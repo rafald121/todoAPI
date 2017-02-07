@@ -8,8 +8,8 @@ app = Flask(__name__)
 
 usersDict = {}
 usersDict['rafal'] = {'token': 'rafaltoken', 'password': 'rafal', 'userID': 1, 'tasks': {}}
-# usersDict['pawel'] = {'token': 'paweltoken', 'password': 'pawel', 'userID': 2}
-# usersDict['piotr'] = {'token': 'piotrtoken', 'password': 'piotr', 'userID': 3}
+usersDict['pawel'] = {'token': 'paweltoken', 'password': 'pawel', 'userID': 2}
+usersDict['piotr'] = {'token': 'piotrtoken', 'password': 'piotr', 'userID': 3}
 
 tasksDict = {}
 tasksDict[1] = {"title": "Projekt z programowania internetowego",
@@ -203,7 +203,7 @@ def getListOfTasksByDone(un_done):
     status = 400
     print("done or undone")
     print(un_done)
-
+    
     if 'token' in request.headers:
         if request.headers['token'] in usersDict['rafal']['token']:
             if un_done == "done":
