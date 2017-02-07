@@ -33,6 +33,34 @@ tasksDict[3] = {"title": "Specyfikacja dla klienta",
                 "done": 0,
                 "id": 3
                 }
+tasksDict[4] = {"title": "Odkurzenie pokoju",
+                "details": "Za kanapą, łóżkiem i pod biurkiem",
+                "timeToDo": "11.09.2015",
+                "tag": "home",
+                "done": 0,
+                "id": 4
+                }
+tasksDict[5] = {"title": "Zlozyc zyczenia cioci Uli",
+                "details": "",
+                "timeToDo": "25.08.2012",
+                "tag": "home",
+                "done": 0,
+                "id": 5
+                }
+tasksDict[6] = {"title": "Narysowanie rysunku technicznego",
+                "details": "Rozmiar a5, ołówek hb, do wyboru tematy nr od 5 do 12",
+                "timeToDo": "15.01.2016",
+                "tag": "work",
+                "done": 0,
+                "id": 6
+                }
+tasksDict[7] = {"title": "Stworzenie biznes planu na nasz nowy biznes",
+                "details": "Koniecznie uwzględnić wszystkie wydatki, dochody, koszty pracowników i koszty wynajmu budynku",
+                "timeToDo": "25.09.2012",
+                "tag": "work",
+                "done": 0,
+                "id": 7
+                }
 tokenDict = {}
 lastID = len(tasksDict)
 
@@ -184,7 +212,7 @@ def tasks():
                 print(tasksDict[task])
                 listOfTasks.append(tasksDict[task])
 
-            print listOfTasks
+            # print listOfTasks
             status = 200
             responseData = listOfTasks
         else:
@@ -291,13 +319,20 @@ def editDoneTasks(id):
                         tag = requestData['tag']
                         done = requestData['done']
                         print("daneeee")
-                        print ("title %s, details %s, timeToDo %s, tag %s, id %s, done%s ", title, details, timeToDo, tag, id, done)
+                        print done
+                        # print ("title %s, details %s, timeToDo %s, tag %s, id %s, done%s ", title, details, timeToDo, tag, id, done)
 
                         tasksDict[id]['title'] = title
                         tasksDict[id]['details'] = details
                         tasksDict[id]['timeToDo'] = timeToDo
                         tasksDict[id]['tag'] = tag
-                        tasksDict[id]['title'] = title
+                        if done:
+                            print "done = true"
+                            tasksDict[id]['done'] = 1
+                        else:
+                            print "done = false"
+                            tasksDict[id]['done'] = 0
+
                         print("EDITED TASK DICT DLA ID")
                         print(tasksDict[id])
                         responseData = tasksDict[id]
@@ -325,6 +360,7 @@ def editDoneTasks(id):
     responseJsonData = json.dumps(responseData)
     responseHeaders = {"Content-Type": "application/json"}
     response = Response(responseJsonData, status=status, mimetype="application/json", headers=responseHeaders)
+    print("--------------------")
     return response
 
 
