@@ -198,6 +198,47 @@ def addTask():
     response = Response(responseJsonData, status=status, mimetype="application/json", headers=responseHeaders)
     return response
 
+@app.route("/tasks/" + "<un_done>", methods=['GET'])
+def getListOfTasksByDone(un_done):
+    status = 400
+
+    if 'token' in request.headers:
+        if request.headers['token'] in usersDict['rafal']['token']:
+            if un_done is "done":
+                listOfDoneTasks = []
+
+                for task in tasksDict:
+                    if tasksDict[task]['done'] == 1:
+                        listOfDoneTasks.append(tasksDict[task])
+
+                status = 200
+                responseData = listOfDoneTasks
+
+            elif un_done is "undone":
+                listOfUndoneTasks = []
+
+                for task in tasksDict:
+                    if tasksDict[task]['done'] == 0:
+                        listOfUndoneTasks.append(tasksDict[task])
+                status = 200
+                responseData = listOfUndoneTasks
+
+            else:
+                status = 400
+                print("inny argument niz done albo undone, pomyuka")
+        else:
+            responseData = {"error": "token from headers does not match to any user in userDict"}
+    else:
+        responseData = {"error": "in request.headers was not token"}
+
+    responseJsonData = json.dumps(responseData)
+    responseHeaders = {'Content-Type': 'application/json'}
+    response = Response(responseJsonData,
+                        status=status,
+                        mimetype="application/json",
+                        headers=responseHeaders)
+    return response
+
 
 @app.route("/tasks", methods=['GET'])
 def tasks():
@@ -231,6 +272,7 @@ def tasks():
 
 # def countUndoneTask():
 
+
 @app.route("/tasks/" + "<int:id>", methods=['GET'])
 def getTasks(id):
     status = 400
@@ -258,45 +300,6 @@ def getTasks(id):
                         headers=responseHeaders)
     return response
 
-
-# @app.route("/tasks/" + "<int:id>", methods=['PUT'])
-# def editDoneTasks(id):
-#     status = 404
-#     if 'token' in request.headers:
-#         if request.headers['token'] == usersDict['rafal']['token']:
-#             if id in tasksDict:
-#
-#                 try:
-#                     requestData = json.loads(request.data)
-#                     requestDataRead = True
-#
-#                     if requestDataRead:
-#                         done = requestData['done']
-#
-#                         if done:
-#                             responseDone = 0
-#                         else:
-#                             responseDone = 1
-#
-#                         tasksDict[id] = {
-#                             'done': responseDone,
-#                         }
-#                         responseData = tasksDict[id]
-#
-#                 except:
-#                     responseData = {"error":"request klienta nie zostal prawidlowo odczytany"}
-#             else:
-#                 responseData = {"error": "brak zadania o danym ID w bazie danych"}
-#
-#         else:
-#             responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
-#     else:
-#         responseData = {"error": "brak tokenu w requescie "}
-#
-#     responseJsonData = json.dumps(responseData)
-#     responseHeaders = {"Content-Type": "application/json"}
-#     response = Response(responseJsonData, status=status, mimetype="application/json", headers=responseHeaders)
-#     return response
 
 @app.route("/tasks/" + "<int:id>", methods=['PUT'])
 def editDoneTasks(id):
