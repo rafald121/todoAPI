@@ -89,9 +89,9 @@ def login():
                     }
                     status = 200
                 else:
-                    responseData = {'error': 'invalid login or password'}
+                    responseData = {'error': 'Invalid password'}
             else:
-                responseData = {'error': 'there isnt that user in database'}
+                responseData = {'error': 'Server does not contain this user in dictionary'}
         else:
             responseData = {'error': 'empty login or password'}
 
@@ -127,7 +127,8 @@ def notdone():
             responseData = {"undone": undone}
             status = 200
         else:
-            responseData = {"error": "couldn't match login to requested token(probably there isn't any user with requested token)"}
+            responseData = {
+                "error": "couldn't match login to requested token(probably there isn't any user with requested token)"}
     else:
         responseData = {"error": "bad syntax of request(bad oken has been given"}
 
@@ -156,7 +157,7 @@ def addTask():
                 if requestDataRead:
 
                     if ('title' in requestData) and ('details' in requestData) and ('timeToDo' in requestData) and (
-                        'tag' in requestData):
+                                'tag' in requestData):
 
                         title = requestData['title']
                         details = requestData['details']
@@ -196,14 +197,15 @@ def addTask():
     response = Response(responseJsonData, status=status, mimetype="application/json", headers=responseHeaders)
     return response
 
-@app.route("/tasks/" + "<tag>", methods = ['GET'])
+
+@app.route("/tasks/" + "<tag>", methods=['GET'])
 def getListByTag(tag):
     status = 400
 
     if 'token' in request.headers:
         if request.headers['token'] in usersDict['rafal']['token']:
 
-            if tag == "done" or tag=="undone":
+            if tag == "done" or tag == "undone":
                 listOfTaskByTag = getListOfTasksByDone(tag)
                 responseData = listOfTaskByTag
                 status = 200
@@ -388,7 +390,6 @@ def deleteTasks(id):
         if request.headers['token'] == usersDict['rafal']['token']:
             if id in tasksDict:
 
-
                 deletedTask = tasksDict[id]
 
                 global tasksDict
@@ -415,8 +416,6 @@ def deleteTasks(id):
 
 # @app.route("/tasks/" + "<tag>", methods=['GET'])
 def getByTag(tag):
-
-
     tasksListByTag = []
 
     for task in tasksDict:
@@ -425,7 +424,6 @@ def getByTag(tag):
             tasksListByTag.append(tasksDict[task])
 
     return tasksListByTag
-
 
 
 if __name__ == '__main__':
