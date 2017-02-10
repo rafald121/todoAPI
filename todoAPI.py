@@ -8,8 +8,6 @@ app = Flask(__name__)
 
 usersDict = {}
 usersDict['rafal'] = {'token': 'rafaltoken', 'password': 'rafal', 'userID': 1, 'tasks': {}}
-usersDict['pawel'] = {'token': 'paweltoken', 'password': 'pawel', 'userID': 2}
-usersDict['piotr'] = {'token': 'piotrtoken', 'password': 'piotr', 'userID': 3}
 
 tasksDict = {}
 tasksDict[1] = {"title": "Projekt z programowania internetowego",
@@ -285,6 +283,8 @@ def tasks():
 
 # def countUndoneTask():
 
+# def returnTasks(id):
+#     return tasksDict[id]
 
 @app.route("/tasks/" + "<int:id>", methods=['GET'])
 def getTasks(id):
