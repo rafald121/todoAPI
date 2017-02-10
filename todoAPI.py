@@ -121,10 +121,18 @@ def notdone():
         if requestData['token'] == usersDict['rafal']['token']:
             # TODO dodac funkcje, ktora liczy niewykonane zadania
             undone = 0
+            done = 0
+            all = 0
             for task in tasksDict:
+                all += 1
                 if tasksDict[task]['done'] == 0:
                     undone += 1
-            responseData = {"undone": undone}
+                elif tasksDict[task]['done'] == 1:
+                    done += 1
+            responseData = {"undone": undone,
+                            "done": done,
+                            "all": all
+                            }
             status = 200
         else:
             responseData = {
