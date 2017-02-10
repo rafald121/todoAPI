@@ -8,8 +8,6 @@ app = Flask(__name__)
 
 usersDict = {}
 usersDict['rafal'] = {'token': 'rafaltoken', 'password': 'rafal', 'userID': 1, 'tasks': {}}
-usersDict['pawel'] = {'token': 'paweltoken', 'password': 'pawel', 'userID': 2}
-usersDict['piotr'] = {'token': 'piotrtoken', 'password': 'piotr', 'userID': 3}
 
 tasksDict = {}
 tasksDict[1] = {"title": "Projekt z programowania internetowego",
@@ -91,9 +89,9 @@ def login():
                     }
                     status = 200
                 else:
-                    responseData = {'error': 'invalid login or password'}
+                    responseData = {'error': 'Invalid password'}
             else:
-                responseData = {'error': 'there isnt that user in database'}
+                responseData = {'error': 'Server does not contain this user in dictionary'}
         else:
             responseData = {'error': 'empty login or password'}
 
@@ -123,13 +121,22 @@ def notdone():
         if requestData['token'] == usersDict['rafal']['token']:
             # TODO dodac funkcje, ktora liczy niewykonane zadania
             undone = 0
+            done = 0
+            all = 0
             for task in tasksDict:
+                all += 1
                 if tasksDict[task]['done'] == 0:
                     undone += 1
-            responseData = {"undone": undone}
+                elif tasksDict[task]['done'] == 1:
+                    done += 1
+            responseData = {"undone": undone,
+                            "done": done,
+                            "all": all
+                            }
             status = 200
         else:
-            responseData = {"error": "couldn't match login to requested token(probably there isn't any user with requested token)"}
+            responseData = {
+                "error": "couldn't match login to requested token(probably there isn't any user with requested token)"}
     else:
         responseData = {"error": "bad syntax of request(bad oken has been given"}
 
@@ -158,7 +165,7 @@ def addTask():
                 if requestDataRead:
 
                     if ('title' in requestData) and ('details' in requestData) and ('timeToDo' in requestData) and (
-                        'tag' in requestData):
+                                'tag' in requestData):
 
                         title = requestData['title']
                         details = requestData['details']
@@ -198,14 +205,15 @@ def addTask():
     response = Response(responseJsonData, status=status, mimetype="application/json", headers=responseHeaders)
     return response
 
-@app.route("/tasks/" + "<tag>", methods = ['GET'])
+
+@app.route("/tasks/" + "<tag>", methods=['GET'])
 def getListByTag(tag):
     status = 400
 
     if 'token' in request.headers:
         if request.headers['token'] in usersDict['rafal']['token']:
 
-            if tag == "done" or tag=="undone":
+            if tag == "done" or tag == "undone":
                 listOfTaskByTag = getListOfTasksByDone(tag)
                 responseData = listOfTaskByTag
                 status = 200
@@ -285,6 +293,8 @@ def tasks():
 
 # def countUndoneTask():
 
+# def returnTasks(id):
+#     return tasksDict[id]
 
 @app.route("/tasks/" + "<int:id>", methods=['GET'])
 def getTasks(id):
@@ -292,6 +302,7 @@ def getTasks(id):
 
     if 'token' in request.headers:
         if request.headers['token'] == usersDict['rafal']['token']:
+
             if id in tasksDict:
 
                 task = tasksDict[id]
@@ -388,7 +399,6 @@ def deleteTasks(id):
         if request.headers['token'] == usersDict['rafal']['token']:
             if id in tasksDict:
 
-
                 deletedTask = tasksDict[id]
 
                 global tasksDict
@@ -397,7 +407,7 @@ def deleteTasks(id):
                 status = 200
                 responseData = deletedTask
             else:
-                responseData = {"error": "brak zadania o danym ID w bazie danych"}
+                responseData = {"error": "There was not task with this id in server, probably other client deleted task before you"}
 
         else:
             responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
@@ -415,8 +425,6 @@ def deleteTasks(id):
 
 # @app.route("/tasks/" + "<tag>", methods=['GET'])
 def getByTag(tag):
-
-
     tasksListByTag = []
 
     for task in tasksDict:
@@ -425,7 +433,6 @@ def getByTag(tag):
             tasksListByTag.append(tasksDict[task])
 
     return tasksListByTag
-
 
 
 if __name__ == '__main__':
