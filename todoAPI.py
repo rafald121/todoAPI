@@ -294,6 +294,7 @@ def getTasks(id):
 
     if 'token' in request.headers:
         if request.headers['token'] == usersDict['rafal']['token']:
+
             if id in tasksDict:
 
                 task = tasksDict[id]
@@ -398,7 +399,7 @@ def deleteTasks(id):
                 status = 200
                 responseData = deletedTask
             else:
-                responseData = {"error": "brak zadania o danym ID w bazie danych"}
+                responseData = {"error": "There was not task with this id in server, probably other client deleted task before you"}
 
         else:
             responseData = {"error": "brak uzytkownika pasującego do podanego przez klienta tokenu"}
